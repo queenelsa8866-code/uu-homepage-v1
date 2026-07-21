@@ -30,10 +30,11 @@
     @media(max-width:560px){.hero{height:820px}.hero.ai-active{height:1120px}.hero h1{font-size:44px}.hero-kicker{margin-bottom:22px}.ai-order-form{align-items:stretch;gap:6px}.ai-order-input{font-size:14px;padding:11px 9px}.ai-order-submit{padding:0 15px}.ai-quote,.ai-order-card,.ai-handoff{width:100%;max-width:100%}.ai-handoff{grid-template-columns:92px 1fr;gap:12px}.ai-handoff img{width:92px;height:92px}.hero-caption{display:none}.hero-order-actions{gap:10px;margin-top:30px}.hero-order-item{flex:1}.hero-order-button{width:100%;height:52px;padding:0 10px;font-size:14px}.hero-order-popover{width:180px}.hero-order-popover img{width:148px!important;height:148px!important}}
     @media(max-width:560px){.ai-order-input{font-size:15px}.ai-order-submit,.ai-order-foot{font-size:13px}.closing-desktop{display:none}.closing-mobile{display:grid}.closing-mobile-panel{aspect-ratio:1/1;overflow:hidden}.closing-mobile-panel img{width:200%;max-width:none;height:auto;aspect-ratio:1774/887;object-fit:contain}.closing-mobile-panel:last-child img{transform:translateX(-50%)}}
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.top,.action,.js-reveal,.js-clip,.hero>img:first-child,.business-card img,.city-img img{transition:none!important;transform:none!important;filter:none!important;clip-path:none!important;opacity:1!important}}
+    .nav a[aria-disabled="true"]{cursor:default}.nav a[aria-disabled="true"]:hover{color:inherit}.nav a[aria-disabled="true"]:hover:after{right:100%}
   </style>
 </head>
 <body>
-  <header class="top" id="top"><div class="shell"><a class="brand-logo" href="#top" aria-label="UU跑腿首页"><img src="assets/uu-logo.png" alt="UU跑腿"></a><nav class="nav"><a class="active" href="#top">首页</a><a href="https://www.uupt.com/services">服务介绍</a><a href="https://www.uupt.com/ai-order">AI下单</a><a href="https://open.uupt.com/">开放平台</a><a href="https://daojia.uupt.com/#/">UU家政</a><a href="https://huoyun.uupt.com/">UU货运</a><a href="https://www.uupt.com/join">加入我们</a><a href="https://www.uupt.com/about">关于UU</a></nav><div class="top-actions"><a class="nav-download" href="#order">下载APP</a><a class="nav-edition enterprise" href="https://es.uupt.com/">企业版</a><a class="nav-edition merchant" href="https://shangjia.uupt.com/index.html#/home/login">商家版</a></div></div></header>
+  <header class="top" id="top"><div class="shell"><a class="brand-logo" href="#top" aria-label="UU跑腿首页"><img src="assets/uu-logo.png" alt="UU跑腿"></a><nav class="nav"><a class="active" href="#top">首页</a><a href="#" aria-disabled="true">服务介绍</a><a href="#" aria-disabled="true">AI下单</a><a href="#" aria-disabled="true">开放平台</a><a href="#" aria-disabled="true">UU家政</a><a href="#" aria-disabled="true">UU货运</a><a href="#" aria-disabled="true">加入我们</a><a href="#" aria-disabled="true">关于UU</a></nav><div class="top-actions"><a class="nav-download" href="#order">下载APP</a><a class="nav-edition enterprise" href="https://es.uupt.com/">企业版</a><a class="nav-edition merchant" href="https://shangjia.uupt.com/index.html#/home/login">商家版</a></div></div></header>
 
   <main>
     <section class="hero"><img src="assets/BUK03327.jpg" alt="UU跑男真实服务场景"><div class="shell"><div class="hero-copy"><div class="hero-kicker">城市急事的可靠行动派</div><h1>同城急事<br>找UU跑腿</h1><div class="hero-bottom"><p>从临时取送到商家配送，UU跑男认真对待每一次托付，让城市里的急事及时得到回应。</p><div class="hero-order-actions"><div class="hero-order-item"><button class="hero-order-button mini" type="button"><span>小程序下单</span><span class="hero-order-arrow" aria-hidden="true">↗</span></button><div class="hero-order-popover" aria-label="UU跑腿小程序下单二维码"><img src="assets/uu-mini-program-order-code.png" alt="UU跑腿小程序下单二维码"><p>微信扫码，随时下单</p></div></div><div class="hero-order-item"><button class="hero-order-button client" type="button"><span>客户端下单</span><span class="hero-order-arrow" aria-hidden="true">↗</span></button><div class="hero-order-popover" aria-label="UU跑腿客户端下载二维码"><img src="assets/uu-client-download-code.png" alt="UU跑腿客户端下载二维码"><p>下载客户端，快速下单</p></div></div></div></div></div></div><div class="hero-caption">本页人物与服务场景均采用UU现有品牌照片</div></section>
@@ -65,6 +66,9 @@
       document.querySelectorAll('a[href^="https://"]').forEach((link) => {
         link.target = '_blank';
         link.rel = 'noopener noreferrer';
+      });
+      document.querySelectorAll('.nav a[aria-disabled="true"]').forEach((link) => {
+        link.addEventListener('click', (event) => event.preventDefault());
       });
 
       const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -261,7 +265,7 @@
         syncVideoControl();
       }
 
-      const navLinks = [...document.querySelectorAll('.nav a[href^="#"]')];
+      const navLinks = [...document.querySelectorAll('.nav a:not([aria-disabled="true"])[href^="#"]')];
       const setActiveNav = (activeLink) => navLinks.forEach(link => link.classList.toggle('active', link === activeLink));
       const observedSections = [...new Set(navLinks.map(link => document.querySelector(link.getAttribute('href'))).filter(Boolean))];
       navLinks.forEach(link => link.addEventListener('click', () => setActiveNav(link)));
