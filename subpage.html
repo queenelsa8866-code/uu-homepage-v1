@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>UU跑腿 · 服务页面</title>
+  <style>
+    :root{--orange:#ff5a00;--ink:#111412;--line:#e8e9e6;--header:72px}
+    *{box-sizing:border-box}html,body{margin:0;height:100%;font-family:"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);background:#f5f6f3}a{color:inherit;text-decoration:none}
+    .top{height:var(--header);background:rgba(255,255,255,.98);border-top:2px solid var(--orange);border-bottom:1px solid var(--line);display:flex;align-items:center;position:relative;z-index:20;box-shadow:0 5px 20px rgba(17,20,18,.05)}
+    .shell{width:min(1200px,calc(100% - 48px));margin:auto;display:flex;align-items:center;height:100%}.brand-logo{width:112px;display:flex;align-items:center;flex:0 0 auto}.brand-logo img{width:100%;height:auto;display:block}
+    .nav{display:flex;gap:28px;margin-left:42px;font-size:14px;white-space:nowrap;height:100%;align-items:center}.nav a{height:100%;display:flex;align-items:center;position:relative}.nav a:after{content:"";position:absolute;left:0;right:100%;bottom:0;height:2px;background:var(--orange);transition:right .25s}.nav a:hover,.nav a.active{color:var(--orange)}.nav a:hover:after,.nav a.active:after{right:0}
+    .top-actions{margin-left:auto;display:flex;gap:12px;align-items:center;font-size:13px;white-space:nowrap}.download{padding:0 10px}.edition{height:42px;padding:0 17px;display:inline-flex;align-items:center;border:1px solid var(--ink)}.edition.merchant{color:var(--orange);border-color:var(--orange)}
+    .frame-viewport{height:calc(100vh - var(--header));overflow:hidden;position:relative;background:#fff}.service-frame{display:block;width:100%;height:calc(100% + var(--header));border:0;transform:translateY(calc(-1 * var(--header)));background:#fff}
+    .loading{position:absolute;inset:0;display:grid;place-items:center;background:#f5f6f3;z-index:2;transition:opacity .3s}.loading.hide{opacity:0;pointer-events:none}.loading span{font-size:14px;color:#777}.loading b{color:var(--orange)}
+    @media(max-width:900px){:root{--header:62px}.shell{width:calc(100% - 28px)}.brand-logo{width:100px}.nav{display:none}.download,.edition:first-of-type{display:none}.edition{height:38px;padding:0 13px}.service-frame{height:calc(100% + 62px);transform:translateY(-62px)}}
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="shell">
+      <a class="brand-logo" data-home-anchor="top" href="index.html#top" aria-label="返回UU跑腿V1首页"><img src="assets/uu-logo.png" alt="UU跑腿"></a>
+      <nav class="nav" aria-label="网站主导航">
+        <a data-home-anchor="top" href="index.html#top">首页</a>
+        <a data-view="services" href="subpage.html?view=services">服务介绍</a>
+        <a data-view="ai" href="subpage.html?view=ai">AI下单</a>
+        <a data-view="open" href="subpage.html?view=open">开放平台</a>
+        <a data-view="home-service" href="subpage.html?view=home-service">UU家政</a>
+        <a data-view="freight" href="subpage.html?view=freight">UU货运</a>
+        <a data-view="join" href="subpage.html?view=join">加入我们</a>
+        <a data-view="about" href="subpage.html?view=about">关于UU</a>
+      </nav>
+      <div class="top-actions">
+        <a class="download" data-home-anchor="order" href="index.html#order">下载APP</a>
+        <a class="edition" href="subpage.html?view=enterprise">企业版</a>
+        <a class="edition merchant" href="subpage.html?view=merchant">商家版</a>
+      </div>
+    </div>
+  </header>
+  <main class="frame-viewport">
+    <div class="loading" id="loading"><span><b>UU</b> 服务页面加载中…</span></div>
+    <iframe class="service-frame" id="service-frame" title="UU跑腿服务页面" sandbox="allow-forms allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-downloads" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  </main>
+  <script>
+    (() => {
+      const homePage = location.pathname.includes('/uu-homepage-concept/') ? 'enterprise.html' : 'index.html';
+      document.querySelectorAll('[data-home-anchor]').forEach((link) => {
+        link.href = `${homePage}#${link.dataset.homeAnchor}`;
+      });
+      const pages = {
+        services: ['服务介绍','https://www.uupt.com/services'],
+        ai: ['AI下单','https://www.uupt.com/ai-order'],
+        open: ['开放平台','https://open.uupt.com/'],
+        'home-service': ['UU家政','https://daojia.uupt.com/#/'],
+        freight: ['UU货运','https://huoyun.uupt.com/'],
+        join: ['加入我们','https://www.uupt.com/join'],
+        driver: ['加入UU跑男','https://www.uupt.com/join/driver'],
+        about: ['关于UU','https://www.uupt.com/about'],
+        contact: ['联系我们','https://www.uupt.com/about/contact'],
+        faq: ['常见问题','https://www.uupt.com/about/faq'],
+        agreement: ['用户协议','https://www.uupt.com/limit-content'],
+        enterprise: ['企业版','https://es.uupt.com/'],
+        merchant: ['商家版','https://shangjia.uupt.com/index.html#/home/login']
+      };
+      const params = new URLSearchParams(location.search);
+      const view = Object.hasOwn(pages, params.get('view')) ? params.get('view') : 'services';
+      const [label, url] = pages[view];
+      document.title = `${label} · UU跑腿`;
+      document.querySelector(`[data-view="${view}"]`)?.classList.add('active');
+      const frame = document.getElementById('service-frame');
+      const loading = document.getElementById('loading');
+      frame.addEventListener('load', () => loading.classList.add('hide'));
+      frame.src = url;
+    })();
+  </script>
+</body>
+</html>
