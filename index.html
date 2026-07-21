@@ -62,6 +62,11 @@
   <footer id="about"><div class="shell"><div class="footer-grid"><div><div class="logo">UU跑腿<small style="color:#7f847f">同城急事 · 找UU跑腿</small></div><p class="footer-desc">连接城市即时需求与专业服务者，让每一件不能耽搁的小事得到及时回应。</p></div><div><h4>服务业务</h4><a href="https://www.uupt.com/services">个人跑腿</a><a href="https://shangjia.uupt.com/index.html#/home/login">商家配送</a><a href="https://open.uupt.com/">开放平台</a></div><div><h4>合作生态</h4><a href="https://shangjia.uupt.com/index.html#/home/login">商家合作</a><a href="https://open.uupt.com/">开放接入</a><a href="https://www.uupt.com/join/driver">加入跑男</a></div><div><h4>关于UU</h4><a href="https://www.uupt.com/about">品牌介绍</a><a href="https://www.uupt.com/join">加入我们</a><a href="https://www.uupt.com/about/contact">联系我们</a></div><div><h4>帮助支持</h4><a href="https://www.uupt.com/services">服务说明</a><a href="https://www.uupt.com/about/faq">常见问题</a><a href="https://www.uupt.com/limit-content">用户协议</a></div></div><div class="foot-bottom"><span>© UU跑腿官网首页改版视觉概念</span><span>隐私政策 · 平台规则 · 法律声明</span></div></div></footer>
   <script>
     (() => {
+      document.querySelectorAll('a[href^="https://"]').forEach((link) => {
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+      });
+
       const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
       const body = document.body;
       const header = document.querySelector('.top');
