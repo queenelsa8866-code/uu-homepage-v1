@@ -46,7 +46,7 @@
 
     <section class="service-guarantee" id="guarantee" aria-label="UU跑腿服务保障"><div class="shell"><header class="service-guarantee-copy"><h2>从下单到送达，全程有保障</h2><p>响应、交付、隐私与售后，每一步都有人认真负责</p></header><div class="service-guarantee-scroll"><img src="assets/uu-service-guarantee-icons-v1.png" alt="快速响应、专人服务、隐私保护、全程保障" loading="lazy" decoding="async"></div></div></section>
 
-    <section class="service-film" id="service-film" aria-label="UU跑男真实配送过程"><div class="service-film-frame"><video id="service-film-video" src="assets/uu-delivery-service.mp4" autoplay muted loop playsinline preload="metadata" aria-label="UU跑男骑行、取件与交付场景"></video><div class="film-meta"><div class="film-copy"><div><strong>真实响应，正在城市里发生</strong><span>UU DELIVERY IN MOTION · 真实跑男履约影像</span></div></div><button class="film-toggle" type="button" aria-label="暂停配送视频" aria-pressed="false">Ⅱ</button></div></div></section>
+    <section class="service-film" id="service-film" aria-label="UU跑男真实配送过程"><div class="service-film-frame"><video id="service-film-video" autoplay muted loop playsinline webkit-playsinline preload="auto" poster="assets/BUK03184.jpg" aria-label="UU跑男骑行、取件与交付场景"><source src="assets/uu-delivery-service.mp4" type="video/mp4"></video><div class="film-meta"><div class="film-copy"><div><strong>真实响应，正在城市里发生</strong><span>UU DELIVERY IN MOTION · 点击画面可播放或暂停</span></div></div><button class="film-toggle" type="button" aria-label="播放配送视频" aria-pressed="true">▶</button></div></div></section>
 
     <section class="ability" id="ability"><div class="shell"><div class="ability-intro"><h2>让每一次响应，<br>都更确定</h2><p>速度是基础，可靠来自完整的服务过程。UU把人员、任务、位置和交付连接起来，让用户对事情的进展心中有数。</p></div><div class="ability-grid"><div class="ability-item"><strong>01</strong><h3>快速响应</h3><p>及时承接需求，减少用户等待。</p></div><div class="ability-item"><strong>02</strong><h3>过程透明</h3><p>关键节点持续更新，任务状态清楚。</p></div><div class="ability-item"><strong>03</strong><h3>认真交付</h3><p>核对物品与需求，完成有凭证。</p></div><div class="ability-item"><strong>04</strong><h3>服务保障</h3><p>遇到问题，有明确渠道及时承接。</p></div></div></div></section>
 
@@ -206,24 +206,53 @@
       }
 
       if (serviceVideo && filmToggle) {
+        serviceVideo.muted = true;
+        serviceVideo.defaultMuted = true;
+        serviceVideo.playsInline = true;
+
         const syncVideoControl = () => {
           const paused = serviceVideo.paused;
           filmToggle.textContent = paused ? '▶' : 'Ⅱ';
           filmToggle.setAttribute('aria-label', paused ? '播放配送视频' : '暂停配送视频');
           filmToggle.setAttribute('aria-pressed', String(paused));
         };
-        filmToggle.addEventListener('click', () => {
-          if (serviceVideo.paused) serviceVideo.play().catch(() => {});
+        const playVideo = async () => {
+          try {
+            await serviceVideo.play();
+          } catch (_) {
+            syncVideoControl();
+          }
+        };
+        const toggleVideo = () => {
+          if (serviceVideo.paused) playVideo();
           else serviceVideo.pause();
-          syncVideoControl();
+        };
+
+        filmToggle.addEventListener('click', (event) => {
+          event.stopPropagation();
+          toggleVideo();
         });
+        serviceVideo.addEventListener('click', toggleVideo);
+        serviceVideo.addEventListener('loadeddata', playVideo, { once: true });
+        serviceVideo.addEventListener('canplay', playVideo, { once: true });
         serviceVideo.addEventListener('play', syncVideoControl);
         serviceVideo.addEventListener('pause', syncVideoControl);
+        serviceVideo.addEventListener('error', () => {
+          filmToggle.textContent = '↻';
+          filmToggle.setAttribute('aria-label', '重新加载配送视频');
+        });
         serviceVideo.addEventListener('timeupdate', () => {
           const endCardStarts = Number.isFinite(serviceVideo.duration) && serviceVideo.currentTime >= serviceVideo.duration - 3.6;
           serviceFilm?.classList.toggle('is-ending', endCardStarts);
         });
-        if (reduceMotion) serviceVideo.pause();
+
+        const videoObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) playVideo();
+            else serviceVideo.pause();
+          });
+        }, { threshold: .18 });
+        videoObserver.observe(serviceVideo);
         syncVideoControl();
       }
 
